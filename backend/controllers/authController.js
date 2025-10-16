@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../models/userModel.js";
 
-const JWT_SECRET = "Arun12345";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 
 // ✅ Auth middleware
