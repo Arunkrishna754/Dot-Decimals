@@ -28,7 +28,19 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
-app.use("/api/profile/addresses" ,profileRoutes)
+app.use("/api/profile/addresses", profileRoutes);
+
+// ✅ Root route for testing
+app.get("/", (req, res) => {
+  res.json({ message: "API is running successfully!" });
+});
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+// Only listen when not in serverless environment
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+}
+
+// ✅ Export for Vercel (ES Module syntax)
+export default app;
