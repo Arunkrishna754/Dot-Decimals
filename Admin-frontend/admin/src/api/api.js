@@ -1,13 +1,11 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL:
-    import.meta.env.VITE_ADMIN_API_URL ||
-    import.meta.env.VITE_API_URL ||
-    (import.meta.env.MODE === "development"
-      ? "http://localhost:3000/api"
-      : "https://dot-decimals.onrender.com/api"),
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
-export default API;
+// Named export
+export { API };
 
+// Default export
+export default API;
