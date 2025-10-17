@@ -14,19 +14,7 @@ dotenv.config();
 const app = express();
 
 // ✅ Updated CORS Configuration
-app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:5175',
-    'https://dot-decimals.vercel.app',  // Your frontend
-    'https://*.vercel.app'  // All Vercel preview deployments
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors);
 
 app.use(express.json());
 
