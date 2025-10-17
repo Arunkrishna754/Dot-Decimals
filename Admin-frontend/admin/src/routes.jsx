@@ -19,7 +19,7 @@ const PrivateRoute = ({ children }) => {
     setToken(storedToken);
   }, []);
 
-  return token ? children : <Navigate to="/admin/login" />;
+  return token ? children : <Navigate to="/admin/Login" />;
 };
 
 // Admin layout with sidebar and header - NOW WITH RESPONSIVE STATE
@@ -57,7 +57,7 @@ export default function Router() {
   return (
     <Routes>
       {/* Admin login */}
-      <Route path="/admin/login" element={<Login />} />
+      <Route path="/admin/Login" element={<Login />} />
 
       {/* Admin protected routes */}
       <Route
