@@ -8,7 +8,7 @@ import AddProduct from "./pages/AddProduct";
 import Orders from "./pages/Orders";
 import AdminHeader from "./components/AdminHeader";
 import Sidebar from "./components/Sidebar";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import Products from "./pages/Products";
 
 const PrivateRoute = ({ children }) => {
