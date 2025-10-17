@@ -15,26 +15,39 @@ const connectDB = async () => {
   }
 };
 
+// Create default admin if not exists
 const createAdmin = async () => {
-  const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+  const { ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
 
-  const existingAdmin = await User.findOne({ email: ADMIN_EMAIL });
-  if (existingAdmin) {
-    console.log("⚠️ Admin already exists");
-    return process.exit();
+  if (!ADMIN_NAME || !ADMIN_EMAIL || !ADMIN_PASSWORD) {
+    console.error("❌ ADMIN_NAME, ADMIN_EMAIL, or ADMIN_PASSWORD not set in .env");
+    return;
   }
 
-  const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
+  try {
+    // Check if admin with this email already exists
+    const existingAdmin = await User.findOne({ email: ADMIN_EMAIL, role: "admin" });
+    if (existingAdmin) {
+      console.log("⚠️ Admin already exists:", ADMIN_EMAIL);
+      return; // Admin exists, do nothing
+    }
 
-  const admin = await User.create({
-    email: ADMIN_EMAIL,
-    password: hashedPassword,
-    role: "admin",
-  });
+    // Hash password
+    const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
 
-  console.log("✅ Default admin created:", admin.email);
-  process.exit();
+    // Create new admin
+    const admin = await User.create({
+      name: ADMIN_NAME,
+      email: ADMIN_EMAIL,
+      password: hashedPassword,
+      role: "admin",
+    });
+
+    console.log("✅ Default admin created:", admin.email);
+  } catch (err) {
+    console.error("❌ Failed to create admin:", err.message);
+  }
 };
 
-// Connect DB and create admin
+// Connect to DB and create admin
 connectDB().then(createAdmin);

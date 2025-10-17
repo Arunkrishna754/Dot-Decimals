@@ -8,7 +8,7 @@ import AddProduct from "./pages/AddProduct";
 import Orders from "./pages/Orders";
 import AdminHeader from "./components/AdminHeader";
 import Sidebar from "./components/Sidebar";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import Products from "./pages/Products";
 
 const PrivateRoute = ({ children }) => {
@@ -19,7 +19,7 @@ const PrivateRoute = ({ children }) => {
     setToken(storedToken);
   }, []);
 
-  return token ? children : <Navigate to="/admin/login" />;
+  return token ? children : <Navigate to="/admin/Login" />;
 };
 
 // Admin layout with sidebar and header - NOW WITH RESPONSIVE STATE
@@ -57,7 +57,7 @@ export default function Router() {
   return (
     <Routes>
       {/* Admin login */}
-      <Route path="/admin/login" element={<Login />} />
+      <Route path="/admin/Login" element={<Login />} />
 
       {/* Admin protected routes */}
       <Route
@@ -116,7 +116,7 @@ export default function Router() {
       />
 
       {/* Redirect unknown routes to admin login */}
-      <Route path="*" element={<Navigate to="/admin/login" />} />
+      <Route path="*" element={<Navigate to="/admin/Login" />} />
     </Routes>
   );
 }
