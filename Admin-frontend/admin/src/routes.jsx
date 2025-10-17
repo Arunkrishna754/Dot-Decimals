@@ -116,7 +116,7 @@ export default function Router() {
       />
 
       {/* Redirect unknown routes to admin login */}
-      <Route path="*" element={<Navigate to="/admin/login" />} />
+      <Route path="*" element={<Navigate to="/admin/Login" />} />
     </Routes>
   );
 }
