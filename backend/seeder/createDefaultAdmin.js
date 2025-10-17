@@ -15,31 +15,39 @@ const connectDB = async () => {
   }
 };
 
+// Create default admin if not exists
 const createAdmin = async () => {
-  const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+  const { ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
 
-  if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
-    console.error("❌ ADMIN_EMAIL or ADMIN_PASSWORD not set in env");
+  if (!ADMIN_NAME || !ADMIN_EMAIL || !ADMIN_PASSWORD) {
+    console.error("❌ ADMIN_NAME, ADMIN_EMAIL, or ADMIN_PASSWORD not set in .env");
     return;
   }
 
-  const existingAdmin = await User.findOne({ email: ADMIN_EMAIL });
-  if (existingAdmin) {
-    console.log("⚠️ Admin already exists:", ADMIN_EMAIL);
-    return; // do NOT exit, allow server to start
+  try {
+    // Check if admin with this email already exists
+    const existingAdmin = await User.findOne({ email: ADMIN_EMAIL, role: "admin" });
+    if (existingAdmin) {
+      console.log("⚠️ Admin already exists:", ADMIN_EMAIL);
+      return; // Admin exists, do nothing
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
+
+    // Create new admin
+    const admin = await User.create({
+      name: ADMIN_NAME,
+      email: ADMIN_EMAIL,
+      password: hashedPassword,
+      role: "admin",
+    });
+
+    console.log("✅ Default admin created:", admin.email);
+  } catch (err) {
+    console.error("❌ Failed to create admin:", err.message);
   }
-
-  const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
-
-  const admin = await User.create({
-    name: "Admin",          // ✅ required by schema
-    email: ADMIN_EMAIL,
-    password: hashedPassword,
-    role: "admin",          // explicitly set admin
-  });
-
-  console.log("✅ Default admin created:", admin.email);
 };
 
-// Connect DB and create admin
+// Connect to DB and create admin
 connectDB().then(createAdmin);
