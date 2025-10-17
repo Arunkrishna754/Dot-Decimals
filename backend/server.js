@@ -78,7 +78,7 @@ const adminBuildPath = path.join(__dirname, "../admin-frontend/dist");
 app.use(express.static(adminBuildPath));
 
 // ✅ Catch-all route for React Router (handles refresh)
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(adminBuildPath, "index.html"));
 });
 
