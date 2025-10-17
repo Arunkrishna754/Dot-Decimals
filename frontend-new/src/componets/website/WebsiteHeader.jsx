@@ -84,11 +84,11 @@ const WebsiteHeader = () => {
 
   return (
     <div className="fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] h-[5.5rem] sm:h-[7rem] flex items-center px-6 sm:px-12 rounded-[2rem] shadow-lg z-50 text-white"
-         style={{
-           background: "linear-gradient(135deg, rgba(236, 236, 236, 0.2), rgba(255, 255, 255, 0.1))",
-           backdropFilter: "blur(20px)",
-           border: "1px solid rgba(255, 255, 255, 0.3)"
-         }}>
+      style={{
+        background: "linear-gradient(135deg, rgba(236, 236, 236, 0.2), rgba(255, 255, 255, 0.1))",
+        backdropFilter: "blur(20px)",
+        border: "1px solid rgba(255, 255, 255, 0.3)"
+      }}>
       <div className="flex justify-between items-center gap-4 sm:gap-10 w-full">
         <Link to="/" className="relative">
           <img
@@ -190,80 +190,77 @@ const WebsiteHeader = () => {
       <Drawer
         open={isOpen}
         onClose={toggleDrawer}
-        direction="right"
-        className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/30 text-white transition-all duration-300 ${
-          isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
-        }`}
+        direction="left" // ✅ Drawer opens from left
+        className="fixed top-0 left-0 h-full w-64 bg-gray-900 text-white z-50 flex flex-col transition-transform duration-300"
         style={{
-          transformOrigin: "center",
-          background: "rgba(0, 0, 0, 0.3)", // Semi-transparent black
-          backdropFilter: "blur(10px)", // Frosty effect
+          transformOrigin: "left",
+          backdropFilter: "blur(10px)",
         }}
       >
-        <div className="flex flex-col h-full pt-4 px-6">
-          <div className="flex items-center justify-end w-full pb-6">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-white text-[1.5rem] hover:opacity-70 transition-opacity"
-            >
-              <IoMdClose />
-            </button>
-          </div>
+        {/* Close button on the right */}
+        <div className="flex items-center justify-end px-4 py-4 border-b border-white/10">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-white text-[1.5rem] hover:opacity-70 transition-opacity"
+          >
+            <IoMdClose />
+          </button>
+        </div>
 
-          {/* Mobile Links */}
-          <div className="flex flex-col gap-4">
-            {routes
-              .filter((r) => r.name !== "Login / Signup")
-              .map(({ name, path }) => (
-                <Link
-                  to={path}
-                  key={path}
-                  onClick={() => setIsOpen(false)}
-                  className={`text-lg text-white ${pathname === path ? "font-bold" : "hover:text-blue-400"}`}
-                >
-                  {name}
-                </Link>
-              ))}
-
-            <button
-              onClick={() => { navigate("/cart"); setIsOpen(false); }}
-              className="text-lg text-white relative"
-            >
-              Cart
-              {isLoggedIn && cartCount > 0 && (
-                <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-
-            {isLoggedIn ? (
-              <>
-                <button
-                  onClick={() => { navigate("/profile"); setIsOpen(false); }}
-                  className="text-lg text-white"
-                >
-                  Profile
-                </button>
-                <button
-                  onClick={() => { handleLogout(); setIsOpen(false); }}
-                  className="text-lg text-red-400"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
+        {/* Mobile Links aligned to left */}
+        <div className="flex flex-col px-4 py-6 gap-4 items-center ">
+          {routes
+            .filter((r) => r.name !== "Login / Signup")
+            .map(({ name, path }) => (
               <Link
-                to="/auth"
+                to={path}
+                key={path}
                 onClick={() => setIsOpen(false)}
-                className="text-lg text-blue-400"
+                className={`text-lg text-white ${pathname === path ? "font-bold" : "hover:text-blue-400"}`}
               >
-                Login / Signup
+                {name}
               </Link>
+            ))}
+
+          <button
+            onClick={() => { navigate("/cart"); setIsOpen(false); }}
+            className="text-lg text-white relative"
+          >
+            Cart
+            {isLoggedIn && cartCount > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+                {cartCount}
+              </span>
             )}
-          </div>
+          </button>
+
+          {isLoggedIn ? (
+            <>
+              <button
+                onClick={() => { navigate("/profile"); setIsOpen(false); }}
+                className="text-lg text-white"
+              >
+                Profile
+              </button>
+              <button
+                onClick={() => { handleLogout(); setIsOpen(false); }}
+                className="text-lg text-red-400"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/auth"
+              onClick={() => setIsOpen(false)}
+              className="text-lg text-blue-400"
+            >
+              Login / Signup
+            </Link>
+          )}
         </div>
       </Drawer>
+
     </div>
   );
 };
