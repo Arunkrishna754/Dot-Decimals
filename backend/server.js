@@ -10,17 +10,29 @@ import orderRoutes from "./routes/orderRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 
+// Load environment variables
 dotenv.config();
+
+// Initialize Express app
 const app = express();
 
-// ✅ Updated CORS Configuration
-// ✅ Fixed CORS - added () and configuration
+// Port configuration - MUST be before app.listen()
+const PORT = process.env.PORT || 10000;
+
+console.log('🔧 Starting server...');
+console.log('📍 PORT:', PORT);
+console.log('🌍 NODE_ENV:', process.env.NODE_ENV);
+
+// CORS Configuration
 app.use(cors({
   origin: [
     'http://localhost:3000',
     'http://localhost:5173',
     'http://localhost:5174',
     'http://localhost:5175',
+    'https://dot-decimals.vercel.app',
+    'https://*.vercel.app',
+    'https://*.onrender.com'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -29,31 +41,79 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ Serve uploaded files
+// Serve uploaded files
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-connectDB();
+// Health check routes
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "API is running successfully!",
+    timestamp: new Date().toISOString(),
+    port: PORT,
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 
-// ✅ Routes
+app.get("/api", (req, res) => {
+  res.json({ message: "API endpoint is working!" });
+});
+
+app.get("/health", (req, res) => {
+  res.json({ status: "OK", uptime: process.uptime() });
+});
+
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/profile/addresses", profileRoutes);
 
-// ✅ Root route for testing
-app.get("/", (req, res) => {
-  res.json({ message: "API is running successfully!" });
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ 
+    message: "Route not found",
+    path: req.path 
+  });
 });
 
-const PORT = process.env.PORT || 5000;
+// Error handler
+app.use((err, req, res, next) => {
+  console.error("❌ Error:", err);
+  res.status(500).json({ 
+    message: "Internal server error",
+    error: err.message 
+  });
+});
 
-// Only listen when not in serverless environment
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT,'0.0.0.0', () => console.log(`🚀 Server running on port ${PORT}`));
-}
+// START SERVER FIRST, THEN CONNECT TO DATABASE
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server is listening on port ${PORT}`);
+  console.log(`🌐 Server URL: http://0.0.0.0:${PORT}`);
+  console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
+  
+  // Connect to database AFTER server starts
+  connectDB()
+    .then(() => console.log('✅ Database connection established'))
+    .catch(err => console.error('❌ Database connection failed:', err));
+});
 
-// ✅ Export for Vercel (ES Module syntax)
+// Handle server errors
+server.on('error', (error) => {
+  console.error('❌ Server error:', error);
+  if (error.code === 'EADDRINUSE') {
+    console.error(`❌ Port ${PORT} is already in use`);
+  }
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('👋 SIGTERM signal received: closing HTTP server');
+  server.close(() => {
+    console.log('✅ HTTP server closed');
+  });
+});
+
 export default app;
