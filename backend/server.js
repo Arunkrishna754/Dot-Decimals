@@ -77,8 +77,11 @@ app.use("/api/profile/addresses", profileRoutes);
 const adminBuildPath = path.join(__dirname, "../admin-frontend/dist");
 app.use(express.static(adminBuildPath));
 
-// ✅ Catch-all route for React Router (handles refresh)
-app.get("/*", (req, res) => {
+// ✅ Express v5 compatible catch-all route (fixes 404 on refresh)
+app.use((req, res, next) => {
+  if (req.originalUrl.startsWith("/api") || req.originalUrl.startsWith("/uploads")) {
+    return next();
+  }
   res.sendFile(path.join(adminBuildPath, "index.html"));
 });
 
