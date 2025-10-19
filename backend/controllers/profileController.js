@@ -65,11 +65,16 @@ export const deleteAddress = async (req, res) => {
     const { id } = req.params;
 
     const user = await User.findById(req.user.userId);
-    user.addresses.id(id).remove();
+    if (!user) return res.status(404).json({ message: "User not found" });
 
+    user.addresses = user.addresses.filter(a => a._id.toString() !== id);
     await user.save();
+
     res.json({ addresses: user.addresses });
   } catch (err) {
+    console.error("❌ Delete Address Error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+

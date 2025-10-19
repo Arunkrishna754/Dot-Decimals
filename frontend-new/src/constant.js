@@ -34,6 +34,7 @@ import { ReactComponent as HybridAppIcon } from "./assets/svgs/hybridappdevelopm
 import { lazy } from "react";
 import ProductList from "./componets/common/ProductList";
 import AuthPage from "./componets/common/AuthPage";
+import PrivacyPolicy from "./pages/website/PrivacyPolicy";
 const Home = lazy(() => import("./pages/website/Home"));
 const Services = lazy(() => import("./pages/website/Services"));
 const ContactUs = lazy(() => import("./pages/website/ContactUs"));
@@ -70,12 +71,14 @@ export {
 export const companyDetails = {
   phone: "+918807165290",
   tel: "+919003635437", // Ensure this value is defined and correct
+  email: "dotsndecimalsinfotech@gmail.com",
   address: "S.F.NO758/2 759/2A, SITE No.86,87, Kovai Thiru Nagar, CBE, Civil Aerodrome Post, Kalapatti, Coimbatore, Tamil Nadu - 641014",
   facebook: "https://facebook.com/yourpage",
   linkedin: "https://linkedin.com/yourpage",
   threads: "https://threads.net/yourpage",
   instagram: "https://instagram.com/yourpage",
   x: "https://twitter.com/yourpage",
+
 };
 
 // website routes
@@ -104,6 +107,45 @@ export const routes = [
     name: "Contact Us",
     path: "/contact-us",
     component: <ContactUs />,
+  },
+   {
+    name: "Login / Signup", // ✅ Add new route name
+    path: "/auth", // ✅ route path
+    component: <AuthPage />, // ✅ your AuthPage component
+  },
+];
+
+
+export const QuickLinks = [
+  {
+    name: "Home",
+    path: "/",
+    component: <Home />,
+  },
+  {
+    name: "Services",
+    path: "/services",
+    component: <Services />,
+  },
+  {
+    name: "Products",
+    path:"/products",
+    component: <ProductList />,
+  },
+  {
+    name: "About Us",
+    path: "/about-us",
+    component: <AboutUs />,
+  },
+  {
+    name: "Contact Us",
+    path: "/contact-us",
+    component: <ContactUs />,
+  },
+    {
+    name: "Privacy Policy",
+    path: "/privacy-policy",
+    component: <PrivacyPolicy />,
   },
    {
     name: "Login / Signup", // ✅ Add new route name

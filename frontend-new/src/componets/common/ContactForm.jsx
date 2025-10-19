@@ -88,9 +88,10 @@ const ContactForm = () => {
           <div className="w-[2.5rem] h-[2.5rem] rounded-full bg-primary flex justify-center items-center">
             <FaPhone className="text-2xl scale-x-[-1]" />
           </div>
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-fulls space-y-2">
             <p className="font-medium">Call Us</p>
             <p className="desc">{companyDetails.phone}</p>
+            <p className="desc">{companyDetails.tel}</p>
           </div>
         </Link>
         <Link

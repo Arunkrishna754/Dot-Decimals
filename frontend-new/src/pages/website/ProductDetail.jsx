@@ -29,27 +29,37 @@ const ProductDetail = () => {
   };
 
   // ✅ Add item to backend cart
+
   const handleAddToCart = async () => {
+    const token = localStorage.getItem("token");
+
+    // 🔒 Check if user is logged in
+    if (!token) {
+      toast.error("Please login to continue!");
+      return; // Stop further execution
+    }
+
     try {
       setLoading(true);
 
-      const token = localStorage.getItem("token");
       const headers = { headers: { Authorization: `Bearer ${token}` } };
-
       await API.post("/cart", { productId: product._id, quantity: 1 }, headers);
 
       setLoading(false);
 
-      // Dispatch event to refresh cart count in header
+      // Update cart count in header
       window.dispatchEvent(new CustomEvent("cartUpdated"));
 
-      navigate("/cart");
+      toast.success("Item added to cart!");
+      navigate("/cart"); // Optional: go to cart
     } catch (error) {
       setLoading(false);
       console.error("Error adding to cart:", error);
       toast.error(error.response?.data?.message || "Failed to add to cart");
     }
   };
+
+
 
 
   // ✅ Buy Now = Add to cart + redirect to checkout

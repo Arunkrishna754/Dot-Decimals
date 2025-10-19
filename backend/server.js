@@ -70,7 +70,7 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/cart", cartRoutes);
+app.use("/api/cart", cartRoutes); 
 app.use("/api/profile/addresses", profileRoutes);
 
 // ✅ Serve frontend (IMPORTANT PART)

@@ -42,12 +42,8 @@ const ProductList = () => {
         }
     };
 
+    // ✅ Updated: Remove login check here
     const handleViewDetails = (productId) => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            toast.error("You have not logged in!");
-            return;
-        }
         navigate(`/product/${productId}`);
     };
 

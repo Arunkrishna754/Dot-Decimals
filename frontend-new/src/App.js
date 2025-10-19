@@ -23,6 +23,8 @@ import Cart from "./pages/website/Cart";
 import Orders from "./pages/website/Orders";
 import { Toaster } from "react-hot-toast";
 import ProfilePage from "./pages/website/ProfilePage";
+import { QuickLinks } from "./constant";
+
 const Thankyou = lazy(() => import("./pages/Thankyou"));
 
 
@@ -37,11 +39,27 @@ export default function App() {
       <Suspense fallback={<LoadingSpinner />}>
         <ScrollToTop />
         <WhatsAppIconPopUp />
-         <Toaster position="top-right" reverseOrder={false}  />
+        <Toaster position="top-right" reverseOrder={false} />
         <Routes>
           {/* Website Pages */}
           {routes.map(({ component, name, path }, index) => (
             <Route
+              path={path}
+              element={
+                <>
+                  <WebsiteHeader name={name} />
+                  {component}
+                  <WebsiteFooter />
+                </>
+              }
+            />
+          ))}
+
+
+          {/* Quick Links (like Privacy Policy, Terms, etc.) */}
+          {QuickLinks.map(({ component, name, path }) => (
+            <Route
+              key={`quick-${path}`}
               path={path}
               element={
                 <>
@@ -129,18 +147,21 @@ export default function App() {
           />
 
 
-             <Route
+          <Route
             path="/profile"
             element={
               <>
-                <WebsiteHeader name="My profile"/>
+                <WebsiteHeader name="My profile" />
                 <ProfilePage />
                 <WebsiteFooter />
               </>
             }
           />
 
-          
+
+
+
+
 
 
 
