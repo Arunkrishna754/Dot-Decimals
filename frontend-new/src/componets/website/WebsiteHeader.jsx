@@ -169,10 +169,11 @@ const WebsiteHeader = () => {
           ) : (
             <Link
               to="/auth"
-              className="text-xs sm:text-sm bg-blue-600 hover:bg-blue-700 rounded-full px-4 py-2"
+              className="text-xs sm:text-sm bg-yellow-400 hover:bg-yellow-500 text-black rounded-full px-4 py-2 transition"
             >
               Login / Signup
             </Link>
+
           )}
         </div>
 
