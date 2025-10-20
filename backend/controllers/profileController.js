@@ -78,3 +78,37 @@ export const deleteAddress = async (req, res) => {
 };
 
 
+// profileController.js
+// ✅ profileController.js
+export const updateUser = async (req, res) => {
+  try {
+    const userId = req.user.userId; // ✅ changed from _id to userId
+    const { name, email } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ message: "Name and email are required" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { name, email },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "Profile updated successfully",
+      user: {
+        name: updatedUser.name,
+        email: updatedUser.email,
+      },
+    });
+  } catch (error) {
+    console.error("❌ Update user error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+

@@ -10,6 +10,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 
+
 dotenv.config();
 
 const app = express();
@@ -72,6 +73,8 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes); 
 app.use("/api/profile/addresses", profileRoutes);
+app.use("/api/profile", profileRoutes);
+
 
 // ✅ Serve frontend (IMPORTANT PART)
 const adminBuildPath = path.join(__dirname, "../admin-frontend/dist");

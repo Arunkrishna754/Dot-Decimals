@@ -7,10 +7,18 @@ const ProfilePage = () => {
     name: localStorage.getItem("userName") || "",
     email: localStorage.getItem("userEmail") || "",
   });
+
   const [addresses, setAddresses] = useState([]);
-  const [form, setForm] = useState({ street: "", city: "", state: "", pincode: "", phone: "" });
+  const [form, setForm] = useState({
+    street: "",
+    city: "Coimbatore",
+    state: "Tamil Nadu",
+    pincode: "",
+    phone: ""
+  });
   const [loading, setLoading] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [pinError, setPinError] = useState(false);
 
   const token = localStorage.getItem("token");
   const headers = { headers: { Authorization: `Bearer ${token}` } };
@@ -29,11 +37,41 @@ const ProfilePage = () => {
   };
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // update user for name/email
+    if (name === "name" || name === "email") {
+      setUser({ ...user, [name]: value });
+      return;
+    }
+
+    setForm({ ...form, [name]: value });
+
+    if (name === "pincode") {
+      setPinError(!/^641\d{3}$/.test(value));
+    }
   };
 
   const handleSave = async () => {
-    if (!/^641\d{3}$/.test(form.pincode)) return toast.error("Only Coimbatore pincodes allowed");
+    // Update user info
+    if (!user.name || !user.email) {
+      return toast.error("Please fill name and email");
+    }
+    try {
+      await API.put("/profile", user, headers);
+      localStorage.setItem("userName", user.name);
+      localStorage.setItem("userEmail", user.email);
+      toast.success("Profile updated");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Error updating profile");
+    }
+
+    // Address validation
+    if (!form.street || !form.pincode || !form.phone) {
+      return toast.error("Please fill all mandatory fields (*)");
+    }
+
+    if (pinError) return toast.error("Only Coimbatore pincodes allowed");
     if (!/^\d{10}$/.test(form.phone)) return toast.error("Enter valid 10-digit phone");
 
     setLoading(true);
@@ -47,8 +85,9 @@ const ProfilePage = () => {
         toast.success("Address added");
       }
       setAddresses(res.data.addresses || []);
-      setForm({ street: "", city: "", state: "", pincode: "", phone: "" });
+      setForm({ street: "", city: "Coimbatore", state: "Tamil Nadu", pincode: "", phone: "" });
       setEditId(null);
+      setPinError(false);
     } catch (err) {
       toast.error(err.response?.data?.message || "Error saving address");
     } finally {
@@ -59,6 +98,7 @@ const ProfilePage = () => {
   const handleEdit = (addr) => {
     setForm(addr);
     setEditId(addr._id);
+    setPinError(!/^641\d{3}$/.test(addr.pincode));
   };
 
   const handleDelete = async (id) => {
@@ -74,6 +114,20 @@ const ProfilePage = () => {
     }
   };
 
+  const handleProfileSave = async () => {
+  if (!user.name || !user.email) {
+    return toast.error("Please fill name and email");
+  }
+  try {
+    await API.put("/profile", user, headers);
+    localStorage.setItem("userName", user.name);
+    localStorage.setItem("userEmail", user.email);
+    toast.success("Profile updated");
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Error updating profile");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center py-12 px-4 mt-20">
@@ -81,37 +135,100 @@ const ProfilePage = () => {
       <div className="w-full max-w-4xl bg-gray-900 rounded-2xl shadow-lg p-8 mb-8">
         <h2 className="text-2xl font-semibold mb-6 text-white">Profile</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input
-            type="text"
-            value={user.name}
-            disabled
-            className="p-3 bg-gray-800 text-gray-300 border border-gray-700 rounded"
-          />
-          <input
-            type="email"
-            value={user.email}
-            disabled
-            className="p-3 bg-gray-800 text-gray-300 border border-gray-700 rounded"
-          />
+          <div>
+            <label className="block text-gray-300 mb-1">Name *</label>
+            <input
+              type="text"
+              name="name"
+              value={user.name}
+              onChange={handleChange}
+              className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-300 mb-1">Email *</label>
+            <input
+              type="email"
+              name="email"
+              value={user.email}
+              onChange={handleChange}
+              className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded w-full"
+            />
+          </div>
         </div>
+        <button
+          onClick={handleProfileSave}
+          className="mt-4 bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-lg transition"
+        >
+          Save Profile
+        </button>
       </div>
 
       {/* Address Form */}
       <div className="w-full max-w-4xl bg-gray-900 rounded-2xl shadow-lg p-8 mb-4">
-        <h2 className="text-xl font-semibold mb-4 text-white">
+        <h2 className="text-xl font-semibold mb-2 text-white">
           {editId ? "Edit Address" : "Add New Address"}
         </h2>
+        <p className="text-gray-400 mb-4 text-sm">
+          Currently, the products are available only in Coimbatore location.
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input name="street" value={form.street} onChange={handleChange} placeholder="Street"
-            className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded placeholder-gray-500" />
-          <input name="city" value={form.city} onChange={handleChange} placeholder="City"
-            className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded placeholder-gray-500" />
-          <input name="state" value={form.state} onChange={handleChange} placeholder="State"
-            className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded placeholder-gray-500" />
-          <input name="pincode" value={form.pincode} onChange={handleChange} placeholder="Pincode"
-            className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded placeholder-gray-500" />
-          <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone"
-            className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded placeholder-gray-500" />
+          <div>
+            <label className="block text-gray-300 mb-1">Street *</label>
+            <input
+              name="street"
+              value={form.street}
+              onChange={handleChange}
+              placeholder="Street"
+              className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-300 mb-1">City</label>
+            <input
+              name="city"
+              value={form.city}
+              onChange={handleChange}
+              placeholder="City"
+              className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-300 mb-1">State</label>
+            <input
+              name="state"
+              value={form.state}
+              onChange={handleChange}
+              placeholder="State"
+              className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-300 mb-1">Pincode *</label>
+            <input
+              name="pincode"
+              value={form.pincode}
+              onChange={handleChange}
+              placeholder="Pincode"
+              className={`p-3 bg-gray-800 text-gray-200 border rounded w-full ${pinError ? "border-red-500" : "border-gray-700"
+                }`}
+            />
+            {pinError && (
+              <p className="text-red-500 text-sm mt-1">
+                Only Coimbatore pincodes allowed
+              </p>
+            )}
+          </div>
+          <div>
+            <label className="block text-gray-300 mb-1">Phone *</label>
+            <input
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              placeholder="Phone"
+              className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded w-full"
+            />
+          </div>
         </div>
         <button
           onClick={handleSave}
