@@ -7,7 +7,7 @@ const MapComponent = lazy(() => import("../../componets/website/MapComponent"));
 const PrivacyPolicy = () => {
   return (
     <>
-      <Banner page="Privacy-Policy" />
+      
       <Policy />
       
     </>
