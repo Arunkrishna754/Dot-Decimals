@@ -12,6 +12,7 @@
     "hamburger-react": "^2.5.1",
     "keen-slider": "^6.8.6",
     "leaflet": "^1.9.4",
+    "lucide-react": "^0.546.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.53.2",

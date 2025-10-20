@@ -8,6 +8,7 @@ import { homeBannerVideo } from "../../constant";
 import OurServices from "../../componets/website/OurServices";
 import EndlessOpportunitiesSection from "../../componets/common/EndlessOpportunitiesSection";
 import UnlockEfficiency from "../../componets/common/UnlockEfficiency";
+import Certificate from "../../componets/common/Certificate"; // Add this import
 
 const Home = () => {
   return (
@@ -61,7 +62,7 @@ const Home = () => {
               <p className="desc">
                 At Dots&Decimals Infotech, we are driven by a passion for
                 delivering innovative and impactful solutions that help
-                businesses thrive in today’s digital world. Whether you need a
+                businesses thrive in today's digital world. Whether you need a
                 custom website, a next-gen mobile app, or solutions in emerging
                 technologies like AI, blockchain, and AR/VR, we are here to help
                 you achieve your goals and stay ahead of the competition.
@@ -88,6 +89,10 @@ const Home = () => {
           </div>
         </div>
       </section>
+      
+      {/* Certificate Component - Added here */}
+      <Certificate />
+      
       <OurServices length={3} />
       <section className="py-[5rem] bg-black text-white">
         <div
