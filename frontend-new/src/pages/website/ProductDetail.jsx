@@ -28,15 +28,18 @@ const ProductDetail = () => {
     }
   };
 
-  // ✅ Add item to backend cart
-
+  // ✅ Add item to backend cart (without toast - toast now in button)
   const handleAddToCart = async () => {
     const token = localStorage.getItem("token");
 
     // 🔒 Check if user is logged in
     if (!token) {
-      toast.error("Please login to continue!");
-      return; // Stop further execution
+      // Redirect to auth page after 1.5 seconds
+      setTimeout(() => {
+        navigate("/auth");
+      }, 1500);
+      
+      return false; // Return false to indicate not logged in
     }
 
     try {
@@ -49,24 +52,33 @@ const ProductDetail = () => {
 
       // Update cart count in header
       window.dispatchEvent(new CustomEvent("cartUpdated"));
-
-      toast.success("Item added to cart!");
+      
       navigate("/cart"); // Optional: go to cart
+      return true; // Return true to indicate success
     } catch (error) {
       setLoading(false);
       console.error("Error adding to cart:", error);
-      toast.error(error.response?.data?.message || "Failed to add to cart");
+      return error.response?.data?.message || "Failed to add to cart"; // Return error message
     }
   };
 
-
-
-
   // ✅ Buy Now = Add to cart + redirect to checkout
   const handleBuyNow = async () => {
+    const token = localStorage.getItem("token");
+
+    // 🔒 Check if user is logged in for Buy Now too
+    if (!token) {
+      setTimeout(() => {
+        navigate("/auth");
+      }, 1500);
+      
+      return;
+    }
+
     try {
       setLoading(true);
-      await API.post("/cart", { productId: product._id, quantity: 1 });
+      const headers = { headers: { Authorization: `Bearer ${token}` } };
+      await API.post("/cart", { productId: product._id, quantity: 1 }, headers);
       setLoading(false);
       navigate("/checkout");
     } catch (error) {
@@ -126,14 +138,62 @@ const ProductDetail = () => {
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 w-full">
             <button
-              onClick={handleAddToCart}
+              onClick={async () => {
+                const token = localStorage.getItem("token");
+                
+                // 🔒 Check if user is logged in FIRST
+                if (!token) {
+                  toast.error("Please login or signup to continue!", {
+                    duration: 3000,
+                    position: "top-center",
+                  });
+                  setTimeout(() => navigate("/auth"));
+                  return;
+                }
+
+                // Call the add to cart function
+                const result = await handleAddToCart();
+                
+                // Show appropriate toast based on result
+                if (result === true) {
+                  toast.success("Item added to cart!", {
+                    duration: 2000,
+                    position: "top-center",
+                  });
+                } else if (typeof result === "string") {
+                  // If result is a string, it's an error message
+                  toast.error(result, {
+                    duration: 3000,
+                    position: "top-center",
+                  });
+                }
+              }}
               disabled={loading}
               className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 px-6 py-3 rounded-full font-semibold shadow-lg transition-transform duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               🛒 {loading ? "Adding..." : "Add to Cart"}
             </button>
+            
+            {/* Buy Now Button - Uncomment if needed */}
             {/* <button
-              onClick={handleBuyNow}
+              onClick={async () => {
+                const token = localStorage.getItem("token");
+                
+                if (!token) {
+                  toast.error("Please login or signup to continue!", {
+                    duration: 3000,
+                    position: "top-center",
+                  });
+                  setTimeout(() => navigate("/auth"), 1500);
+                  return;
+                }
+                
+                await handleBuyNow();
+                toast.success("Processing your order!", {
+                  duration: 2000,
+                  position: "top-center",
+                });
+              }}
               disabled={loading}
               className="w-full bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 px-6 py-3 rounded-full font-semibold shadow-lg transition-transform duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >

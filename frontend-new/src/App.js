@@ -84,9 +84,9 @@ export default function App() {
               path={`/${obj.id}`}
               element={
                 <>
-                  <LandingHeader />
+                  <WebsiteHeader />
                   <LandingPage page={obj.id} />
-                  <LandingFooter />
+                  <WebsiteFooter />
                 </>
               }
             />

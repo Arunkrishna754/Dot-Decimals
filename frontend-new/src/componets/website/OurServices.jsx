@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Drawer from "react-modern-drawer";
 import { IoMdClose } from "react-icons/io";
 
+
 const OurServices = ({ length }) => {
   const [isOpen, setIsOpen] = useState(false);
   const services = allServices.slice(0, length || allServices.length);
@@ -15,7 +16,10 @@ const OurServices = ({ length }) => {
     setIsOpen(true);
   };
   return (
-    <div className="py-[5rem] bg-[#101010] text-white">
+
+    <>
+
+        <div className="py-[5rem] bg-[#101010] text-white">
       <div
         data-aos="fade-up"
         className="wrapper flex flex-col text-center gap-5 items-center"
@@ -92,6 +96,9 @@ const OurServices = ({ length }) => {
         </div>
       </Drawer>
     </div>
+    
+    </>
+
   );
 };
 

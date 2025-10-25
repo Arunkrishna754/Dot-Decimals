@@ -23,13 +23,15 @@ import ContactForm from "../../componets/common/ContactForm";
 import BrandLogos from "../../componets/common/BrandLogos";
 import { landingPageContent } from "../../data/servicesPageDetalls";
 
+
 export const LandingPage = ({ page }) => {
   const isWebDevelopment = Boolean(page === "web-development");
   const selectedService = landingPageContent.find((item) => item.id === page);
 
   return (
     <>
-      <div id="banner" className="min-h-screen relative">
+  
+      <div id="banner" className="min-h-screen relative mt-10">
         <img
           src={selectedService?.bannerImg}
           className="w-full h-full object-cover object-right absolute"

@@ -115,25 +115,25 @@ const ProfilePage = () => {
   };
 
   const handleProfileSave = async () => {
-  if (!user.name || !user.email) {
-    return toast.error("Please fill name and email");
-  }
-  try {
-    await API.put("/profile", user, headers);
-    localStorage.setItem("userName", user.name);
-    localStorage.setItem("userEmail", user.email);
-    toast.success("Profile updated");
-  } catch (err) {
-    toast.error(err.response?.data?.message || "Error updating profile");
-  }
-};
+    if (!user.name || !user.email) {
+      return toast.error("Please fill name and email");
+    }
+    try {
+      await API.put("/profile", user, headers);
+      localStorage.setItem("userName", user.name);
+      localStorage.setItem("userEmail", user.email);
+      toast.success("Profile updated");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Error updating profile");
+    }
+  };
 
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center py-12 px-4 mt-20">
       {/* User Info */}
       <div className="w-full max-w-4xl bg-gray-900 rounded-2xl shadow-lg p-8 mb-8">
-        <h2 className="text-2xl font-semibold mb-6 text-white">Profile</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-[#FFD700]">Profile</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-gray-300 mb-1">Name *</label>
@@ -158,7 +158,7 @@ const ProfilePage = () => {
         </div>
         <button
           onClick={handleProfileSave}
-          className="mt-4 bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-lg transition"
+          className="mt-4 bg-[#FFD700] hover:bg-green-500 text-black px-6 py-2 rounded-lg transition"
         >
           Save Profile
         </button>
@@ -166,7 +166,7 @@ const ProfilePage = () => {
 
       {/* Address Form */}
       <div className="w-full max-w-4xl bg-gray-900 rounded-2xl shadow-lg p-8 mb-4">
-        <h2 className="text-xl font-semibold mb-2 text-white">
+        <h2 className="text-xl font-semibold mb-2 text-[#FFD700]">
           {editId ? "Edit Address" : "Add New Address"}
         </h2>
         <p className="text-gray-400 mb-4 text-sm">
@@ -233,57 +233,62 @@ const ProfilePage = () => {
         <button
           onClick={handleSave}
           disabled={loading}
-          className="mt-4 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg transition"
+          className="mt-4 bg-[#FFD700]  text-black px-6 py-2 rounded-lg transition"
         >
           {loading ? "Saving..." : editId ? "Update Address" : "Add Address"}
         </button>
       </div>
 
       {/* Address Table / Cards */}
-      <div className="w-full max-w-4xl bg-gray-900 rounded-2xl shadow-lg p-8">
-        <h2 className="text-xl font-semibold mb-4 text-white">Saved Addresses</h2>
+      <div className="w-[97%] sm:w-[95%] lg:w-[92%] xl:w-[85%] mx-auto bg-gray-900 rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-800">
+        <h2 className="text-2xl font-semibold mb-6 text-white text-center sm:text-left text-[#FFD700]">
+          Saved Addresses
+        </h2>
 
-        {/* Desktop Table */}
-        <div className="hidden sm:block overflow-x-auto">
-          <table className="w-full border border-gray-700">
+        {/* Desktop Table (≥1024px) */}
+        <div className="hidden lg:block overflow-x-auto rounded-lg">
+          <table className="w-full min-w-[950px] border border-gray-700 text-sm sm:text-base text-gray-200">
             <thead>
-              <tr className="bg-gray-800 text-gray-300">
-                <th className="border border-gray-700 px-2 py-2">Street</th>
-                <th className="border border-gray-700 px-2 py-2">City</th>
-                <th className="border border-gray-700 px-2 py-2">State</th>
-                <th className="border border-gray-700 px-2 py-2">Pincode</th>
-                <th className="border border-gray-700 px-2 py-2">Phone</th>
-                <th className="border border-gray-700 px-2 py-2">Actions</th>
+              <tr className="bg-gray-800 text-[#FFD700] font-semibold uppercase">
+                <th className="border border-gray-700 px-4 py-3 text-left whitespace-nowrap">Street</th>
+                <th className="border border-gray-700 px-4 py-3 text-left whitespace-nowrap">City</th>
+                <th className="border border-gray-700 px-4 py-3 text-left whitespace-nowrap">State</th>
+                <th className="border border-gray-700 px-4 py-3 text-left whitespace-nowrap">Pincode</th>
+                <th className="border border-gray-700 px-4 py-3 text-left whitespace-nowrap">Phone</th>
+                <th className="border border-gray-700 px-4 py-3 text-center whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody>
               {addresses.length > 0 ? (
                 addresses.map((addr) => (
-                  <tr key={addr._id} className="hover:bg-gray-800">
-                    <td className="border border-gray-700 px-2 py-2">{addr.street}</td>
-                    <td className="border border-gray-700 px-2 py-2">{addr.city}</td>
-                    <td className="border border-gray-700 px-2 py-2">{addr.state}</td>
-                    <td className="border border-gray-700 px-2 py-2">{addr.pincode}</td>
-                    <td className="border border-gray-700 px-2 py-2">{addr.phone}</td>
-                    <td className="border border-gray-700 px-2 py-2 space-x-2">
-                      <button
-                        onClick={() => handleEdit(addr)}
-                        className="bg-yellow-500 hover:bg-yellow-400 text-black px-3 py-1 rounded transition"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(addr._id)}
-                        className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded transition"
-                      >
-                        Delete
-                      </button>
+                  <tr key={addr._id} className="hover:bg-gray-800 transition-colors duration-200">
+                    <td className="border border-gray-700 px-4 py-3 break-words">{addr.street}</td>
+                    <td className="border border-gray-700 px-4 py-3 break-words">{addr.city}</td>
+                    <td className="border border-gray-700 px-4 py-3 break-words">{addr.state}</td>
+                    <td className="border border-gray-700 px-4 py-3 break-words">{addr.pincode}</td>
+                    <td className="border border-gray-700 px-4 py-3 break-words">{addr.phone}</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center">
+                      {/* Keep buttons in single line */}
+                      <div className="flex justify-center items-center gap-3 flex-nowrap">
+                        <button
+                          onClick={() => handleEdit(addr)}
+                          className="bg-yellow-500 hover:bg-yellow-400 text-black px-4 py-1.5 rounded text-sm font-medium transition whitespace-nowrap"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(addr._id)}
+                          className="bg-red-600 hover:bg-red-500 text-white px-4 py-1.5 rounded text-sm font-medium transition whitespace-nowrap"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center py-3 text-gray-400">
+                  <td colSpan="6" className="text-center py-4 text-gray-400">
                     No addresses added
                   </td>
                 </tr>
@@ -292,26 +297,32 @@ const ProfilePage = () => {
           </table>
         </div>
 
-        {/* Mobile Cards */}
-        <div className="sm:hidden flex flex-col gap-4">
+        {/* Mobile / Tablet Cards (≤1023px) */}
+        <div className="lg:hidden flex flex-col gap-4 mt-4">
           {addresses.length > 0 ? (
             addresses.map((addr) => (
-              <div key={addr._id} className="bg-gray-800 rounded-lg p-4 shadow border border-gray-700">
-                <p><span className="font-semibold">Street:</span> {addr.street}</p>
-                <p><span className="font-semibold">City:</span> {addr.city}</p>
-                <p><span className="font-semibold">State:</span> {addr.state}</p>
-                <p><span className="font-semibold">Pincode:</span> {addr.pincode}</p>
-                <p><span className="font-semibold">Phone:</span> {addr.phone}</p>
-                <div className="mt-2 flex gap-2">
+              <div
+                key={addr._id}
+                className="bg-gray-800 rounded-xl p-5 shadow border border-gray-700 text-gray-200 transition hover:border-gray-500"
+              >
+                <div className="space-y-2 text-sm sm:text-base">
+                  <p><span className="font-semibold text-gray-300">Street:</span> {addr.street}</p>
+                  <p><span className="font-semibold text-gray-300">City:</span> {addr.city}</p>
+                  <p><span className="font-semibold text-gray-300">State:</span> {addr.state}</p>
+                  <p><span className="font-semibold text-gray-300">Pincode:</span> {addr.pincode}</p>
+                  <p><span className="font-semibold text-gray-300">Phone:</span> {addr.phone}</p>
+                </div>
+
+                <div className="mt-3 flex justify-end gap-3">
                   <button
                     onClick={() => handleEdit(addr)}
-                    className="bg-yellow-500 text-black px-3 py-1 rounded hover:bg-yellow-400"
+                    className="bg-yellow-500 text-black px-4 py-1.5 rounded text-sm font-medium hover:bg-yellow-400 transition"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(addr._id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-500"
+                    className="bg-red-600 text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-red-500 transition"
                   >
                     Delete
                   </button>
@@ -323,6 +334,9 @@ const ProfilePage = () => {
           )}
         </div>
       </div>
+
+
+
     </div>
   );
 };

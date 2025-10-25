@@ -44,7 +44,7 @@ export default function AuthPage() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-black mt-10">
       <div className="bg-[#1a1a1a] shadow-xl rounded-lg p-8 w-96">
-        <h2 className="text-2xl font-bold mb-5 text-center text-blue-500">
+        <h2 className="text-2xl font-bold mb-5 text-center text-[#FFD700]">
           {isLogin ? "Login" : "Signup"}
         </h2>
 
@@ -78,7 +78,7 @@ export default function AuthPage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="w-full bg-[#FFD700] text-black py-2 rounded  transition"
           >
             {isLogin ? "Login" : "Signup"}
           </button>
@@ -95,7 +95,7 @@ export default function AuthPage() {
               setIsLogin(!isLogin);
               setMessage("");
             }}
-            className="text-blue-500 ml-1 hover:underline"
+            className="text-[#FFD700] ml-1 hover:underline"
           >
             {isLogin ? "Signup" : "Login"}
           </button>

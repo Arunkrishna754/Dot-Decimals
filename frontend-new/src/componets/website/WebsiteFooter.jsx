@@ -45,7 +45,7 @@ const WebsiteFooter = () => {
                 >
                   {companyDetails.phone}
                 </Link>
-                  <Link
+                <Link
                   to={`tel:${companyDetails.tel}`}
                   className="text-white/70 desc text-sm"
                 >
@@ -64,13 +64,13 @@ const WebsiteFooter = () => {
         <div className="pt-4 mt-7 border-t text-white/80 border-primary w-full">
           <div className="flex justify-center gap-5 w-full">
             <div
-              className="flex gap-5 items-center mt-5 p-4 rounded-[1rem] shadow-lg"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1))",
-                backdropFilter: "blur(20px)",
-                border: "1px solid rgba(255, 255, 255, 0.3)",
-              }}
+              className="flex gap-5 items-center mt-5 p-4 rounded-[1rem] "
+              // style={{
+              //   background:
+              //     "linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1))",
+              //   backdropFilter: "blur(20px)",
+              //   border: "1px solid rgba(255, 255, 255, 0.3)",
+              // }}
             >
               <Link target="_blank" to={companyDetails.facebook}>
                 <BsFacebook className="text-xl text-white/80 hover:text-primary transition-all duration-300" />
@@ -92,6 +92,20 @@ const WebsiteFooter = () => {
               </Link>
             </div>
           </div>
+          <div className="mt-5 text-center  text-sm flex flex-col">
+            {/* First div for copyright */}
+            <div>
+              <p className="text-white">© 2025 dots&decimals infotech. All rights reserved.</p>
+            </div>
+
+            {/* Second div for recognition */}
+            <div>
+              <p className="text-base md:text-[16px]">
+                Recognized by the Government of India under DPIIT
+              </p>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

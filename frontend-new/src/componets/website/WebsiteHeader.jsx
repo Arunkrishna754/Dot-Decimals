@@ -59,7 +59,9 @@ const WebsiteHeader = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userId");
+    localStorage.removeItem("userName")
     setIsLoggedIn(false);
+    setCartCount(0); 
     setShowProfileMenu(false);
     navigate("/");
 

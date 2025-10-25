@@ -45,11 +45,11 @@ const LandingFooter = () => {
         <div className="pt-4 mt-7 border-t text-white/80 border-primary w-full">
           <div className="flex justify-center gap-5 w-full">
             <div className="flex gap-5 items-center mt-5 p-4 rounded-[1rem] shadow-lg"
-                 style={{
-                   background: "linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1))",
-                   backdropFilter: "blur(20px)",
-                   border: "1px solid rgba(255, 255, 255, 0.3)"
-                 }}>
+              style={{
+                background: "linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1))",
+                backdropFilter: "blur(20px)",
+                border: "1px solid rgba(255, 255, 255, 0.3)"
+              }}>
               <Link target="_blank" to={companyDetails.facebook}>
                 <BsFacebook className="text-xl text-white/80 hover:text-primary transition-all duration-300" />
               </Link>
@@ -70,6 +70,7 @@ const LandingFooter = () => {
               </Link>
             </div>
           </div>
+
         </div>
       </div>
     </div>
