@@ -53,29 +53,39 @@ const ProfilePage = () => {
   };
 
   const handleSave = async () => {
-    // Update user info
+    // 🧩 Step 1: Validate profile fields
     if (!user.name || !user.email) {
       return toast.error("Please fill name and email");
     }
+
+    // 🧩 Step 2: Validate address fields
+    if (!form.street.trim()) {
+      return toast.error("Street field is required");
+    }
+    if (!form.pincode.trim()) {
+      return toast.error("Pincode field is required");
+    }
+    if (!form.phone.trim()) {
+      return toast.error("Phone number is required");
+    }
+    if (pinError) {
+      return toast.error("Only Coimbatore pincodes allowed");
+    }
+    if (!/^\d{10}$/.test(form.phone)) {
+      return toast.error("Enter a valid 10-digit phone number");
+    }
+
+    // ✅ If all validation passed
+    setLoading(true);
+
     try {
+      // 🧩 Step 3: Update user profile
       await API.put("/profile", user, headers);
       localStorage.setItem("userName", user.name);
       localStorage.setItem("userEmail", user.email);
       toast.success("Profile updated");
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Error updating profile");
-    }
 
-    // Address validation
-    if (!form.street || !form.pincode || !form.phone) {
-      return toast.error("Please fill all mandatory fields (*)");
-    }
-
-    if (pinError) return toast.error("Only Coimbatore pincodes allowed");
-    if (!/^\d{10}$/.test(form.phone)) return toast.error("Enter valid 10-digit phone");
-
-    setLoading(true);
-    try {
+      // 🧩 Step 4: Add or update address
       let res;
       if (editId) {
         res = await API.put(`/profile/addresses/${editId}`, form, headers);
@@ -84,16 +94,18 @@ const ProfilePage = () => {
         res = await API.post("/profile/addresses", form, headers);
         toast.success("Address added");
       }
+
       setAddresses(res.data.addresses || []);
       setForm({ street: "", city: "Coimbatore", state: "Tamil Nadu", pincode: "", phone: "" });
       setEditId(null);
       setPinError(false);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Error saving address");
+      toast.error(err.response?.data?.message || "Error saving profile or address");
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleEdit = (addr) => {
     setForm(addr);
